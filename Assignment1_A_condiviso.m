@@ -166,6 +166,7 @@ G_jk_v_4 = G_jk_4(Omega);
 
 G_jk_v = G_jk_v_1 + G_jk_v_2 + G_jk_v_3 + G_jk_v_4;
 
+disp(['phi_1(j): ', num2str(phi(1,167)), ', phi_1(k): ', num2str(phi(1,1000))])
 
 magnitude = abs(G_jk_v);
 phase = angle(G_jk_v)*(180/pi);
