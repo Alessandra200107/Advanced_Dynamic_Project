@@ -103,8 +103,6 @@ gamma_1 = sqrt(sqrt(m*omega_1^2/(E*J)));
 phi_funz_1 = @(xv) C_hat(1,1)*cos(gamma_1*xv)  + C_hat(2,1)*sin(gamma_1*xv) + C_hat(3,1)*cosh(gamma_1*xv)  + C_hat(4,1)*sinh(gamma_1*xv);
 phi_vals_1 = phi_funz_1(x);
 
-integrando_1 = m*phi_vals_1.^2;
-mm_1= trapz(x,integrando_1);
 
 omega_2 = omega(i_nat(2));
 gamma_2 = sqrt(sqrt(m*omega_2^2/(E*J)));
@@ -112,8 +110,7 @@ gamma_2 = sqrt(sqrt(m*omega_2^2/(E*J)));
 phi_funz_2 = @(xv) C_hat(1,2)*cos(gamma_2*xv)  + C_hat(2,2)*sin(gamma_2*xv) + C_hat(3,2)*cosh(gamma_2*xv)  + C_hat(4,2)*sinh(gamma_2*xv);
 phi_vals_2 = phi_funz_2(x);
 
-integrando_2 = m*phi_vals_2.^2;
-mm_2= trapz(x,integrando_2);
+
 
 omega_3 = omega(i_nat(3));
 gamma_3 = sqrt(sqrt(m*omega_3^2/(E*J)));
@@ -121,19 +118,38 @@ gamma_3 = sqrt(sqrt(m*omega_3^2/(E*J)));
 phi_funz_3 = @(xv) C_hat(1,3)*cos(gamma_3*xv)  + C_hat(2,3)*sin(gamma_3*xv) + C_hat(3,3)*cosh(gamma_3*xv)  + C_hat(4,3)*sinh(gamma_3*xv);
 phi_vals_3 = phi_funz_3(x);
 
-integrando_3 = m*phi_vals_3.^2;
-mm_3= trapz(x,integrando_3);
-
 omega_4 = omega(i_nat(4));
 gamma_4 = sqrt(sqrt(m*omega_4^2/(E*J)));
 
 phi_funz_4 = @(xv) C_hat(1,4)*cos(gamma_4*xv)  + C_hat(2,4)*sin(gamma_4*xv) + C_hat(3,4)*cosh(gamma_4*xv)  + C_hat(4,4)*sinh(gamma_4*xv);
 phi_vals_4 = phi_funz_4(x);
 
+
+normaliz1=max(abs([phi_vals_1]));
+normaliz2=max(abs([phi_vals_2]));
+normaliz3=max(abs([phi_vals_3]));
+normaliz4=max(abs([phi_vals_4]));
+
+phi_vals_1=phi_vals_1./normaliz1;
+phi_vals_2=phi_vals_2./normaliz2;
+phi_vals_3=phi_vals_3./normaliz3;
+phi_vals_4=phi_vals_4./normaliz4;
+
+integrando_1 = m*phi_vals_1.^2;
+mm_1= trapz(x,integrando_1);
+
+integrando_2 = m*phi_vals_2.^2;
+mm_2= trapz(x,integrando_2);
+
+integrando_3 = m*phi_vals_3.^2;
+mm_3= trapz(x,integrando_3);
+
 integrando_4 = m*phi_vals_4.^2;
 mm_4= trapz(x,integrando_4);
 
 mm = [mm_1 mm_2 mm_3 mm_4];
+
+
 
 G_jk_1 = @(Omega) (phi(1,167)*phi(1,1000)/mm(1))./(-Omega.^2+1i*2*psi*omega_1*Omega+omega_1.^2);
 G_jk_v_1 = G_jk_1(Omega);
@@ -169,89 +185,89 @@ grid on
 
 %% Other combinations
 
-n = size(phi);
-x_j = x(900);
-x_k = x(400);
-Omega = 2*pi*f;
-psi = 0.01;
-s= 1i*Omega;
-
-omega_1 = omega(i_nat(1));
-gamma_1 = sqrt(sqrt(m*omega_1^2/(E*J)));
-
-phi_funz_1 = @(xv) C_hat(1,1)*cos(gamma_1*xv)  + C_hat(2,1)*sin(gamma_1*xv) + C_hat(3,1)*cosh(gamma_1*xv)  + C_hat(4,1)*sinh(gamma_1*xv);
-phi_vals_1 = phi_funz_1(x);
-
-integrando_1 = m*phi_vals_1.^2;
-mm_1= trapz(x,integrando_1);
-
-omega_2 = omega(i_nat(2));
-gamma_2 = sqrt(sqrt(m*omega_2^2/(E*J)));
-
-phi_funz_2 = @(xv) C_hat(1,2)*cos(gamma_2*xv)  + C_hat(2,2)*sin(gamma_2*xv) + C_hat(3,2)*cosh(gamma_2*xv)  + C_hat(4,2)*sinh(gamma_2*xv);
-phi_vals_2 = phi_funz_2(x);
-
-integrando_2 = m*phi_vals_2.^2;
-mm_2= trapz(x,integrando_2);
-
-omega_3 = omega(i_nat(3));
-gamma_3 = sqrt(sqrt(m*omega_3^2/(E*J)));
-
-phi_funz_3 = @(xv) C_hat(1,3)*cos(gamma_3*xv)  + C_hat(2,3)*sin(gamma_3*xv) + C_hat(3,3)*cosh(gamma_3*xv)  + C_hat(4,3)*sinh(gamma_3*xv);
-phi_vals_3 = phi_funz_3(x);
-
-integrando_3 = m*phi_vals_3.^2;
-mm_3= trapz(x,integrando_3);
-
-omega_4 = omega(i_nat(4));
-gamma_4 = sqrt(sqrt(m*omega_4^2/(E*J)));
-
-phi_funz_4 = @(xv) C_hat(1,4)*cos(gamma_4*xv)  + C_hat(2,4)*sin(gamma_4*xv) + C_hat(3,4)*cosh(gamma_4*xv)  + C_hat(4,4)*sinh(gamma_4*xv);
-phi_vals_4 = phi_funz_4(x);
-
-integrando_4 = m*phi_vals_4.^2;
-mm_4= trapz(x,integrando_4);
-
-mm = [mm_1 mm_2 mm_3 mm_4];
-
-G_jk_1 = @(Omega) (phi(1,900)*phi(1,400)/mm(1))./(-Omega.^2+1i*2*psi*omega_1*Omega+omega_1.^2);
-G_jk_v_1 = G_jk_1(Omega);
-
-G_jk_2 = @(Omega) (phi(2,900)*phi(2,400)/mm(2))./(-Omega.^2+1i*2*psi*omega_2*Omega+omega_2.^2);
-G_jk_v_2 = G_jk_2(Omega);
-
-G_jk_3 = @(Omega) (phi(3,900)*phi(3,400)/mm(3))./(-Omega.^2+1i*2*psi*omega_3*Omega+omega_3.^2);
-G_jk_v_3 = G_jk_3(Omega);
-
-G_jk_4 = @(Omega) (phi(4,900)*phi(4,400)/mm(4))./(-Omega.^2+1i*2*psi*omega_4*Omega+omega_4.^2);
-G_jk_v_4 = G_jk_4(Omega);
-
-G_jk_b = G_jk_v_1 + G_jk_v_2 + G_jk_v_3 + G_jk_v_4;
-
-magnitudeb = abs(G_jk_b);
-phaseb = angle(G_jk_b)*(180/pi);
-
-figure
-subplot(2,1,1)
-semilogy(f,magnitudeb,'LineWidth',3)
-title('FRF')
-xlabel('Frequency [Hz]')
-ylabel('Magnitude [m/N]')
-ylim([1e-8 1e-1])
-legend('x_j = 1.08 x_k = 0.48')
-grid on
-subplot(2,1,2)
-plot(f,phaseb,'LineWidth',3)
-xlabel ('Frequency [Hz]')
-ylabel('Phase [°]')
-grid on
-
+% n = size(phi);
+% x_j = x(900);
+% x_k = x(400);
+% Omega = 2*pi*f;
+% psi = 0.01;
+% s= 1i*Omega;
+% 
+% omega_1 = omega(i_nat(1));
+% gamma_1 = sqrt(sqrt(m*omega_1^2/(E*J)));
+% 
+% phi_funz_1 = @(xv) C_hat(1,1)*cos(gamma_1*xv)  + C_hat(2,1)*sin(gamma_1*xv) + C_hat(3,1)*cosh(gamma_1*xv)  + C_hat(4,1)*sinh(gamma_1*xv);
+% phi_vals_1 = phi_funz_1(x);
+% 
+% integrando_1 = m*phi_vals_1.^2;
+% mm_1= trapz(x,integrando_1);
+% 
+% omega_2 = omega(i_nat(2));
+% gamma_2 = sqrt(sqrt(m*omega_2^2/(E*J)));
+% 
+% phi_funz_2 = @(xv) C_hat(1,2)*cos(gamma_2*xv)  + C_hat(2,2)*sin(gamma_2*xv) + C_hat(3,2)*cosh(gamma_2*xv)  + C_hat(4,2)*sinh(gamma_2*xv);
+% phi_vals_2 = phi_funz_2(x);
+% 
+% integrando_2 = m*phi_vals_2.^2;
+% mm_2= trapz(x,integrando_2);
+% 
+% omega_3 = omega(i_nat(3));
+% gamma_3 = sqrt(sqrt(m*omega_3^2/(E*J)));
+% 
+% phi_funz_3 = @(xv) C_hat(1,3)*cos(gamma_3*xv)  + C_hat(2,3)*sin(gamma_3*xv) + C_hat(3,3)*cosh(gamma_3*xv)  + C_hat(4,3)*sinh(gamma_3*xv);
+% phi_vals_3 = phi_funz_3(x);
+% 
+% integrando_3 = m*phi_vals_3.^2;
+% mm_3= trapz(x,integrando_3);
+% 
+% omega_4 = omega(i_nat(4));
+% gamma_4 = sqrt(sqrt(m*omega_4^2/(E*J)));
+% 
+% phi_funz_4 = @(xv) C_hat(1,4)*cos(gamma_4*xv)  + C_hat(2,4)*sin(gamma_4*xv) + C_hat(3,4)*cosh(gamma_4*xv)  + C_hat(4,4)*sinh(gamma_4*xv);
+% phi_vals_4 = phi_funz_4(x);
+% 
+% integrando_4 = m*phi_vals_4.^2;
+% mm_4= trapz(x,integrando_4);
+% 
+% mm = [mm_1 mm_2 mm_3 mm_4];
+% 
+% G_jk_1 = @(Omega) (phi(1,900)*phi(1,400)/mm(1))./(-Omega.^2+1i*2*psi*omega_1*Omega+omega_1.^2);
+% G_jk_v_1 = G_jk_1(Omega);
+% 
+% G_jk_2 = @(Omega) (phi(2,900)*phi(2,400)/mm(2))./(-Omega.^2+1i*2*psi*omega_2*Omega+omega_2.^2);
+% G_jk_v_2 = G_jk_2(Omega);
+% 
+% G_jk_3 = @(Omega) (phi(3,900)*phi(3,400)/mm(3))./(-Omega.^2+1i*2*psi*omega_3*Omega+omega_3.^2);
+% G_jk_v_3 = G_jk_3(Omega);
+% 
+% G_jk_4 = @(Omega) (phi(4,900)*phi(4,400)/mm(4))./(-Omega.^2+1i*2*psi*omega_4*Omega+omega_4.^2);
+% G_jk_v_4 = G_jk_4(Omega);
+% 
+% G_jk_b = G_jk_v_1 + G_jk_v_2 + G_jk_v_3 + G_jk_v_4;
+% 
+% magnitudeb = abs(G_jk_b);
+% phaseb = angle(G_jk_b)*(180/pi);
+% 
+% figure
+% subplot(2,1,1)
+% semilogy(f,magnitudeb,'LineWidth',3)
+% title('FRF')
+% xlabel('Frequency [Hz]')
+% ylabel('Magnitude [m/N]')
+% ylim([1e-8 1e-1])
+% legend('x_j = 1.08 x_k = 0.48')
+% grid on
+% subplot(2,1,2)
+% plot(f,phaseb,'LineWidth',3)
+% xlabel ('Frequency [Hz]')
+% ylabel('Phase [°]')
+% grid on
+G_jk_b=G_jk_a;
 %% FRFs numerically computed
 
 G_jk_EXP = [G_jk_a; G_jk_b]';
 f_min_1 = 4;
 f_max_1 = 5;
-freq1 = linspace(f_min_1,f_max_1,150);
+freq1 = linspace(f_min_1,f_max_1,100);
 i_min1=19952;
 i_max1=24952;
 % for i=1:length(f)
@@ -261,8 +277,9 @@ i_max1=24952;
 %     end
 %         i_max1=i;
 % end
+
 params1 = [omega_1 psi magnitudea(i_nat(1)) 0];
-G_a_EXP_1 = G_jk_EXP(f_min_1:f_max_1,1);
+G_a_EXP_1 = G_jk_EXP(f_min_1:f_max_1, 1);
 %G_a_NUM_1_fun = @(params1,f)...
       %params1(3)./(-(f.^2)+1i*2*params1(2)*params1(1)*f+params1(1)^2) + params1(4); 
 % params1(3) = A  params1(2) = psi  params1(1) = natural frequency  params1(4)= Rh (residuals of higher modes)
@@ -295,10 +312,12 @@ ub = [Inf(1,4)];
 % Ottimizzazione
 opts = optimoptions('lsqnonlin','Display','iter','MaxFunctionEvaluations',5000);
 
-x_opt = lsqnonlin(err, params1, lb, ub);
+x_opt = lsqnonlin(err, params1, lb, ub, opts);
 G_a_NUM_1 = x_opt(3)./ (-(2*pi*freq1).^2 + 1i*2*x_opt(2)*x_opt(1)*2*pi*freq1 + x_opt(1)^2)+x_opt(4);
 
 magnitudea_NUM1 = abs(G_a_NUM_1);
+phasea_NUM1 = angle(G_a_NUM_1)*(180/pi);
+
 figure
 subplot(2,1,1)
 semilogy(f,magnitudea,'LineWidth',3)
@@ -316,6 +335,9 @@ legend('x_j = 0.2 x_k = 1.2')
 
 subplot(2,1,2)
 plot(f,phasea,'LineWidth',3)
+hold on 
+plot(freq1,phasea_NUM1,'or')
+xlim([3 6])
 xlabel ('Frequency [Hz]')
 ylabel('Phase [°]')
 grid on
