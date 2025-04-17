@@ -249,11 +249,20 @@ grid on
 %% FRFs numerically computed
 
 G_jk_EXP = [G_jk_a; G_jk_b]';
-Omega_min_1 = 0;
-Omega_max_1 = 18;
-freq1 = linspace(Omega_min_1,Omega_max_1,500);
-G_a_EXP_1 = G_jk_EXP(omega_1,1);
+f_min_1 = 0;
+f_max_1 = 18;
+freq1 = linspace(f_min_1,f_max_1,500);
+i_min=1;
+for i=1:length(f)
+    if f(i)<f_max_1
+        i=i+1;
+    end
+        i_max=i;
+end
+
+G_a_EXP_1 = G_jk_EXP(freq1,1);
 G_a_NUM_1 = @(params,freq1)...
-    params(3)./(-(freq1.^2)+1i*2*params(2)*params(1)*freq1+params(1)^2) + params(4); 
-% params(3) = A  params(2) = psi  params(1) = natural frequency  params(4)=
-% Rh (resi
+      params(3)./(-(freq1.^2)+1i*2*params(2)*params(1)*freq1+params(1)^2) + params(4); 
+% params(3) = A  params(2) = psi  params(1) = natural frequency  params(4)= Rh (residuals of higher modes)
+diff = G_a_Exp_1 - G_a_NUM_1
+eps = sum(sum( real(diff).^2 + imag(diff).^2 ));
