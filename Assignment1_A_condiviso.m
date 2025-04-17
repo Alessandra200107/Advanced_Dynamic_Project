@@ -152,16 +152,16 @@ mm = [mm_1 mm_2 mm_3 mm_4];
 %     G_jk_v = G_jk(s);
 % end
 
-G_jk_1 = @(Omega) (phi(1,167)*phi(1,1000)/mm(1))./(-Omega.^2+1i*2*psi*omega(1)*Omega+omega(1).^2);
+G_jk_1 = @(Omega) (phi(1,167)*phi(1,1000)/mm(1))./(-Omega.^2+1i*2*psi*omega_1*Omega+omega_1.^2);
 G_jk_v_1 = G_jk_1(Omega);
 
-G_jk_2 = @(Omega) (phi(2,167)*phi(2,1000)/mm(2))./(-Omega.^2+1i*2*psi*omega(2)*Omega+omega(2).^2);
+G_jk_2 = @(Omega) (phi(2,167)*phi(2,1000)/mm(2))./(-Omega.^2+1i*2*psi*omega_2*Omega+omega_2.^2);
 G_jk_v_2 = G_jk_2(Omega);
 
-G_jk_3 = @(Omega) (phi(3,167)*phi(3,1000)/mm(3))./(-Omega.^2+1i*2*psi*omega(3)*Omega+omega(3).^2);
+G_jk_3 = @(Omega) (phi(3,167)*phi(3,1000)/mm(3))./(-Omega.^2+1i*2*psi*omega_3*Omega+omega_3.^2);
 G_jk_v_3 = G_jk_3(Omega);
 
-G_jk_4 = @(Omega) (phi(4,167)*phi(4,1000)/mm(4))./(-Omega.^2+1i*2*psi*omega(4)*Omega+omega(4).^2);
+G_jk_4 = @(Omega) (phi(4,167)*phi(4,1000)/mm(4))./(-Omega.^2+1i*2*psi*omega_4*Omega+omega_4.^2);
 G_jk_v_4 = G_jk_4(Omega);
 
 G_jk_v = G_jk_v_1 + G_jk_v_2 + G_jk_v_3 + G_jk_v_4;
@@ -172,5 +172,15 @@ magnitude = abs(G_jk_v);
 phase = angle(G_jk_v)*(180/pi);
 
 figure
-semilogx(Omega,magnitude)
+subplot(2,1,1)
+semilogy(f,magnitude,'LineWidth',3)
+title('FRF')
+xlabel('Frequency [Hz]')
+ylabel('Magnitude [m/N]')
+ylim([1e-6 1e-1])
+grid on
+subplot(2,1,2)
+plot(f,phase,'LineWidth',3)
+xlabel ('Frequency [Hz]')
+ylabel('Phase [°]')
 grid on
