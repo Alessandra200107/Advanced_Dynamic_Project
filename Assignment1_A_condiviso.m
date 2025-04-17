@@ -261,11 +261,12 @@ i_max1=89956;
 %     end
 %         i_max1=i;
 % end
-
+params1 = [30 0.02 10e-2 0];
 G_a_EXP_1 = G_jk_EXP(i_min1:i_max1,1);
-G_a_NUM_1_fun = @(params,f)...
-      params(3)./(-(f.^2)+1i*2*params(2)*params(1)*f+params(1)^2) + params(4); 
-% params(3) = A  params(2) = psi  params(1) = natural frequency  params(4)= Rh (residuals of higher modes)
-G_a_NUM_1=G_a_NUM_1_fun(params,freq1);
+G_a_NUM_1_fun = @(params1,f)...
+      params1(3)./(-(f.^2)+1i*2*params1(2)*params1(1)*f+params1(1)^2) + params1(4); 
+% params1(3) = A  params1(2) = psi  params1(1) = natural frequency  params1(4)= Rh (residuals of higher modes)
+G_a_NUM_1 = G_a_NUM_1_fun(params1,freq1);
 diff = G_a_EXP_1 - G_a_NUM_1;
 eps = sum(sum( real(diff).^2 + imag(diff).^2 ));
+[om1, psi1, A1, Rh1] = lsqnonlin(eps,params1);
