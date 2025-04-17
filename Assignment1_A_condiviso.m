@@ -149,12 +149,12 @@ G_jk_v_4 = G_jk_4(Omega);
 
 G_jk_a = G_jk_v_1 + G_jk_v_2 + G_jk_v_3 + G_jk_v_4;
 
-magnitude = abs(G_jk_a);
-phase = angle(G_jk_a)*(180/pi);
+magnitudea = abs(G_jk_a);
+phasea = angle(G_jk_a)*(180/pi);
 
 figure
 subplot(2,1,1)
-semilogy(f,magnitude,'LineWidth',3)
+semilogy(f,magnitudea,'LineWidth',3)
 title('FRF')
 xlabel('Frequency [Hz]')
 ylabel('Magnitude [m/N]')
@@ -162,7 +162,7 @@ ylim([1e-6 1e-1])
 grid on
 legend('x_j = 0.2 x_k = 1.2')
 subplot(2,1,2)
-plot(f,phase,'LineWidth',3)
+plot(f,phasea,'LineWidth',3)
 xlabel ('Frequency [Hz]')
 ylabel('Phase [°]')
 grid on
@@ -228,12 +228,12 @@ G_jk_v_4 = G_jk_4(Omega);
 
 G_jk_b = G_jk_v_1 + G_jk_v_2 + G_jk_v_3 + G_jk_v_4;
 
-magnitude = abs(G_jk_b);
-phase = angle(G_jk_b)*(180/pi);
+magnitudeb = abs(G_jk_b);
+phaseb = angle(G_jk_b)*(180/pi);
 
 figure
 subplot(2,1,1)
-semilogy(f,magnitude,'LineWidth',3)
+semilogy(f,magnitudeb,'LineWidth',3)
 title('FRF')
 xlabel('Frequency [Hz]')
 ylabel('Magnitude [m/N]')
@@ -241,7 +241,7 @@ ylim([1e-8 1e-1])
 legend('x_j = 1.08 x_k = 0.48')
 grid on
 subplot(2,1,2)
-plot(f,phase,'LineWidth',3)
+plot(f,phaseb,'LineWidth',3)
 xlabel ('Frequency [Hz]')
 ylabel('Phase [°]')
 grid on
@@ -249,11 +249,11 @@ grid on
 %% FRFs numerically computed
 
 G_jk_EXP = [G_jk_a; G_jk_b]';
-f_min_1 = 0;
-f_max_1 = 18;
-freq1 = linspace(f_min_1,f_max_1,500);
-i_min1=1;
-i_max1=89956;
+f_min_1 = 4;
+f_max_1 = 5;
+freq1 = linspace(f_min_1,f_max_1,150);
+i_min1=19952;
+i_max1=24952;
 % for i=1:length(f)
 %     if f(i)<f_max_1
 %         i=i+1;
@@ -261,12 +261,65 @@ i_max1=89956;
 %     end
 %         i_max1=i;
 % end
-params1 = [30 0.02 10e-2 0];
-G_a_EXP_1 = G_jk_EXP(i_min1:i_max1,1);
-G_a_NUM_1_fun = @(params1,f)...
-      params1(3)./(-(f.^2)+1i*2*params1(2)*params1(1)*f+params1(1)^2) + params1(4); 
+params1 = [omega_1 psi magnitudea(i_nat(1)) 0];
+G_a_EXP_1 = G_jk_EXP(f_min_1:f_max_1,1);
+%G_a_NUM_1_fun = @(params1,f)...
+      %params1(3)./(-(f.^2)+1i*2*params1(2)*params1(1)*f+params1(1)^2) + params1(4); 
 % params1(3) = A  params1(2) = psi  params1(1) = natural frequency  params1(4)= Rh (residuals of higher modes)
-G_a_NUM_1 = G_a_NUM_1_fun(params1,freq1);
-diff = G_a_EXP_1 - G_a_NUM_1;
-eps = sum(sum( real(diff).^2 + imag(diff).^2 ));
-[om1, psi1, A1, Rh1] = lsqnonlin(eps,params1);
+% G_a_NUM_1 = G_a_NUM_1_fun(params1,freq1);
+% diff = G_a_EXP_1 - G_a_NUM_1;
+% eps = sum(sum( real(diff).^2 + imag(diff).^2 ));
+% [om1, psi1, A1, Rh1] = lsqnonlin(eps,params1);
+% 
+% fun = @(params) cost_function_FRF(params, Omega, G_exp)
+
+function err = cost_function_FRF(params, freq, G_exp)
+
+    om1 = params(1);
+    psi1= params(2);
+    A1= params(3);
+    Rh1=params(4);
+    
+    % FRF del singolo modo
+    G_model = A1./ (-(2*pi*freq).^2 + 1i*2*psi1*om1*2*pi*freq + om1^2)+Rh1;
+    diff = G_exp - G_model;
+    % Errore: parte reale e immaginaria
+    %err = [real(G_model - G_exp); imag(G_model - G_exp)];
+    err =sum( real(diff).^2 + imag(diff).^2 );
+end
+err = @(params) cost_function_FRF(params, freq1, G_a_EXP_1);
+% Limiti inferiori e superiori
+lb = [zeros(1,4)];
+ub = [Inf(1,4)];
+
+% Ottimizzazione
+opts = optimoptions('lsqnonlin','Display','iter','MaxFunctionEvaluations',5000);
+
+x_opt = lsqnonlin(err, params1, lb, ub);
+G_a_NUM_1 = x_opt(3)./ (-(2*pi*freq1).^2 + 1i*2*x_opt(2)*x_opt(1)*2*pi*freq1 + x_opt(1)^2)+x_opt(4);
+
+magnitudea_NUM1 = abs(G_a_NUM_1);
+figure
+subplot(2,1,1)
+semilogy(f,magnitudea,'LineWidth',3)
+hold on 
+semilogy(freq1,magnitudea_NUM1,'or')
+title('FRF')
+xlabel('Frequency [Hz]')
+ylabel('Magnitude [m/N]')
+ylim([1e-6 1e-1])
+xlim([3 6])
+grid on
+legend('x_j = 0.2 x_k = 1.2')
+
+
+
+subplot(2,1,2)
+plot(f,phasea,'LineWidth',3)
+xlabel ('Frequency [Hz]')
+ylabel('Phase [°]')
+grid on
+
+
+
+
