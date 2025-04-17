@@ -278,7 +278,7 @@ G_jk_EXP = [G_jk_a; G_jk_b];
 %         i_max1=i;
 % end
 
-params1 = [omega_1 psi magnitudea(i_nat(1)) 0];
+params1 = [omega_1 psi 0.0565 0];
 G_a_EXP_1 = interp1(f, G_jk_EXP(1,:), freq1, 'linear');
 %G_a_EXP_1 = G_jk_EXP(f_min_1:f_max_1, 1);
 %G_a_NUM_1_fun = @(params1,f)...
@@ -313,7 +313,7 @@ ub = [Inf(1,4)];
 % Ottimizzazione
 opts = optimoptions('lsqnonlin','Display','iter','MaxFunctionEvaluations',5000);
 
-x_opt = lsqnonlin(err, params1, lb, ub,opts);
+x_opt = lsqnonlin(err, params1, lb, ub, opts);
 G_a_NUM_1 = x_opt(3)./ (-(2*pi*freq1).^2 + 1i*2*x_opt(2)*x_opt(1)*2*pi*freq1 + x_opt(1)^2)+x_opt(4);
 
 magnitudea_NUM1 = abs(G_a_NUM_1);
