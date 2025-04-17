@@ -114,8 +114,7 @@ gamma_1 = sqrt(sqrt(m*omega_1^2/(E*J)));
 
 phi_funz_1 = @(xv) C_hat(1,1)*cos(gamma_1*xv)  + C_hat(2,1)*sin(gamma_1*xv) + C_hat(3,1)*cosh(gamma_1*xv)  + C_hat(4,1)*sinh(gamma_1*xv);
 phi_vals_1 = phi_funz_1(x);
-normaliz_1 = max(abs(phi_vals_1));
-phi_vals_1 = phi_vals_1./normaliz_1;
+
 integrando_1 = m*phi_vals_1.^2;
 mm_1= trapz(x,integrando_1);
 
@@ -124,8 +123,7 @@ gamma_2 = sqrt(sqrt(m*omega_2^2/(E*J)));
 
 phi_funz_2 = @(xv) C_hat(1,2)*cos(gamma_2*xv)  + C_hat(2,2)*sin(gamma_2*xv) + C_hat(3,2)*cosh(gamma_2*xv)  + C_hat(4,2)*sinh(gamma_2*xv);
 phi_vals_2 = phi_funz_2(x);
-normaliz_2 = max(abs(phi_vals_2));
-phi_vals_2 = phi_vals_2./normaliz_2;
+
 integrando_2 = m*phi_vals_2.^2;
 mm_2= trapz(x,integrando_2);
 
@@ -134,8 +132,7 @@ gamma_3 = sqrt(sqrt(m*omega_3^2/(E*J)));
 
 phi_funz_3 = @(xv) C_hat(1,3)*cos(gamma_3*xv)  + C_hat(2,3)*sin(gamma_3*xv) + C_hat(3,3)*cosh(gamma_3*xv)  + C_hat(4,3)*sinh(gamma_3*xv);
 phi_vals_3 = phi_funz_3(x);
-normaliz_3 = max(abs(phi_vals_3));
-phi_vals_3 = phi_vals_3./normaliz_3;
+
 integrando_3 = m*phi_vals_3.^2;
 mm_3= trapz(x,integrando_3);
 
@@ -144,8 +141,7 @@ gamma_4 = sqrt(sqrt(m*omega_4^2/(E*J)));
 
 phi_funz_4 = @(xv) C_hat(1,4)*cos(gamma_4*xv)  + C_hat(2,4)*sin(gamma_4*xv) + C_hat(3,4)*cosh(gamma_4*xv)  + C_hat(4,4)*sinh(gamma_4*xv);
 phi_vals_4 = phi_funz_4(x);
-normaliz_4 = max(abs(phi_vals_4));
-phi_vals_4 = phi_vals_4./normaliz_4;
+
 integrando_4 = m*phi_vals_4.^2;
 mm_4= trapz(x,integrando_4);
 
