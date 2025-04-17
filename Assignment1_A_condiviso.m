@@ -251,4 +251,9 @@ grid on
 G_jk_EXP = [G_jk_a; G_jk_b]';
 Omega_min_1 = 0;
 Omega_max_1 = 18;
+freq1 = linspace(Omega_min_1,Omega_max_1,500);
 G_a_EXP_1 = G_jk_EXP(omega_1,1);
+G_a_NUM_1 = @(params,freq1)...
+    params(3)./(-(freq1.^2)+1i*2*params(2)*params(1)*freq1+params(1)^2) + params(4); 
+% params(3) = A  params(2) = psi  params(1) = natural frequency  params(4)= Rh (residuals of higher modes)
+epsilon_1 = 
