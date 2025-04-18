@@ -487,7 +487,7 @@ title('FRF')
 xlabel('Frequency [Hz]')
 ylabel('Magnitude [m/N]')
 grid on
-legend('x_j = 0.2 x_k = 1.2')
+legend('$G^{EXP}_{jk} x_j = 0.2 x_k = 1.2$','$G^{NUM}_{jk}$','Interpreter','latex')
 
 subplot(2,2,2)
 semilogy(f,magnitudeb,'LineWidth',3)
@@ -503,7 +503,7 @@ title('FRF')
 xlabel('Frequency [Hz]')
 ylabel('Magnitude [m/N]')
 grid on
-legend('x_j = 1.08 x_k = 0.48')
+legend('$G^{EXP}_{jk}  x_j = 1.08 x_k = 0.48$','$G^{NUM}_{jk}$','Interpreter','latex')
 
 
 subplot(2,2,3)
