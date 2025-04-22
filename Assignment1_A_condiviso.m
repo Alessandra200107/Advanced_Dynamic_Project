@@ -34,6 +34,7 @@ semilogy(f,abs(dets),'-b')
 hold on
 grid on
 xlabel('f [Hz]')
+title('Natural frequencies')
 %xlim([0 8])
 
 i_nat =[];
@@ -82,13 +83,15 @@ red = [1, 0, 0];
 blue = [0, 0, 1];
 colors_p = [linspace(red(1),blue(1),size(phi,1))', linspace(red(2),blue(2),size(phi,1))', linspace(red(3),blue(3),size(phi,1))'];
 plot([0 L],[0 0],'--k','HandleVisibility','off')
+title('Modeshapes')
+xlabel('Distance x from the fixed end [m]')
 
 for ii = 1:size(phi,1)
     plot(x,phi(ii,:),'LineWidth',2,'Color',[colors_p(ii,:)])
     %plot([L-0.5 L+0.5 L+0.5 L-0.5 L-0.5],[-2.6 -2.6 -3.4 -3.4 -2.6],'LineWidth',2,'Color',[colors_p(ii,:)],'HandleVisibility','off')
 end
-%ylim([-5 2])
-legend({'Mode 1','Mode 2','Mode 3','Mode 4'},'Location','NorthOutside')
+ylim([-3 3])
+legend({'Mode 1','Mode 2','Mode 3','Mode 4'})
 
 %%  FRFs
 
@@ -652,12 +655,16 @@ figure, grid on, box on, hold on
 
 plot([0 L],[0 0],'--k','HandleVisibility','off')
 
-plot(x,phi(1,:),'LineWidth',2)
+plot(x,phi(1,:),'LineWidth',2,'Color','#0072BD')
 hold on
-plot(x(167),-imag(max(G_a_NUM_1)*(omega_1*ck_1)/phi(1,1000)),'ob','LineWidth',2)
+plot(x(167),-imag(max(G_a_NUM_1)*(omega_1*ck_1)/phi(1,1000)),'o','LineWidth',3,'Color','#D95319')
 hold on 
-plot(x(330),-imag(max(G_b_NUM_1)*(omega_1*ck_1)/phi(1,1000)),'ob','LineWidth',2)
+plot(x(330),-imag(max(G_b_NUM_1)*(omega_1*ck_1)/phi(1,1000)),'o','LineWidth',3,'Color','#D95319')
 hold on
-plot(x(750),-imag(max(G_c_NUM_1)*(omega_1*ck_1)/phi(1,1000)),'ob','LineWidth',2)
+plot(x(750),-imag(max(G_c_NUM_1)*(omega_1*ck_1)/phi(1,1000)),'o','LineWidth',3,'Color','#D95319')
 hold on
-plot(x(500),-imag(max(G_d_NUM_1)*(omega_1*ck_1)/phi(1,1000)),'ob','LineWidth',2)
+plot(x(500),-imag(max(G_d_NUM_1)*(omega_1*ck_1)/phi(1,1000)),'o','LineWidth',3,'Color','#D95319')
+legend('Model','Identified')
+xlabel('Distance x from the fixed end [m]')
+ylabel('Modeshapes ϕ(x)')
+title('Comparison of the first modeshape')
