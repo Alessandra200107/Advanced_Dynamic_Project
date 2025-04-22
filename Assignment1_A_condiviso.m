@@ -265,19 +265,19 @@ ylabel('Phase [°]')
 grid on
 %%
 
-x_j = x(800);
+x_j = x(750);
 x_k = x(1000);
 
-G_jk_1 = @(Omega) (phi(1,800)*phi(1,1000)/mm(1))./(-Omega.^2+1i*2*psi*omega_1*Omega+omega_1.^2);
+G_jk_1 = @(Omega) (phi(1,750)*phi(1,1000)/mm(1))./(-Omega.^2+1i*2*psi*omega_1*Omega+omega_1.^2);
 G_jk_v_1 = G_jk_1(Omega);
 
-G_jk_2 = @(Omega) (phi(2,800)*phi(2,1000)/mm(2))./(-Omega.^2+1i*2*psi*omega_2*Omega+omega_2.^2);
+G_jk_2 = @(Omega) (phi(2,750)*phi(2,1000)/mm(2))./(-Omega.^2+1i*2*psi*omega_2*Omega+omega_2.^2);
 G_jk_v_2 = G_jk_2(Omega);
 
-G_jk_3 = @(Omega) (phi(3,800)*phi(3,1000)/mm(3))./(-Omega.^2+1i*2*psi*omega_3*Omega+omega_3.^2);
+G_jk_3 = @(Omega) (phi(3,750)*phi(3,1000)/mm(3))./(-Omega.^2+1i*2*psi*omega_3*Omega+omega_3.^2);
 G_jk_v_3 = G_jk_3(Omega);
 
-G_jk_4 = @(Omega) (phi(4,800)*phi(4,1000)/mm(4))./(-Omega.^2+1i*2*psi*omega_4*Omega+omega_4.^2);
+G_jk_4 = @(Omega) (phi(4,750)*phi(4,1000)/mm(4))./(-Omega.^2+1i*2*psi*omega_4*Omega+omega_4.^2);
 G_jk_v_4 = G_jk_4(Omega);
 
 G_jk_c = G_jk_v_1 + G_jk_v_2 + G_jk_v_3 + G_jk_v_4;
@@ -285,20 +285,25 @@ G_jk_c = G_jk_v_1 + G_jk_v_2 + G_jk_v_3 + G_jk_v_4;
 magnitudec = abs(G_jk_c);
 phasec = angle(G_jk_c)*(180/pi);
 
-figure
-subplot(2,1,1)
-semilogy(f,magnitudec,'LineWidth',3)
-title('FRF')
-xlabel('Frequency [Hz]')
-ylabel('Magnitude [m/N]')
-ylim([1e-8 1e-1])
-legend('x_j = 1.08 x_k = 0.48')
-grid on
-subplot(2,1,2)
-plot(f,phasec,'LineWidth',3)
-xlabel ('Frequency [Hz]')
-ylabel('Phase [°]')
-grid on
+x_j = x(500);
+x_k = x(1000);
+
+G_jk_1 = @(Omega) (phi(1,500)*phi(1,1000)/mm(1))./(-Omega.^2+1i*2*psi*omega_1*Omega+omega_1.^2);
+G_jk_v_1 = G_jk_1(Omega);
+
+G_jk_2 = @(Omega) (phi(2,500)*phi(2,1000)/mm(2))./(-Omega.^2+1i*2*psi*omega_2*Omega+omega_2.^2);
+G_jk_v_2 = G_jk_2(Omega);
+
+G_jk_3 = @(Omega) (phi(3,500)*phi(3,1000)/mm(3))./(-Omega.^2+1i*2*psi*omega_3*Omega+omega_3.^2);
+G_jk_v_3 = G_jk_3(Omega);
+
+G_jk_4 = @(Omega) (phi(4,500)*phi(4,1000)/mm(4))./(-Omega.^2+1i*2*psi*omega_4*Omega+omega_4.^2);
+G_jk_v_4 = G_jk_4(Omega);
+
+G_jk_d = G_jk_v_1 + G_jk_v_2 + G_jk_v_3 + G_jk_v_4;
+
+magnituded = abs(G_jk_d);
+phased = angle(G_jk_d)*(180/pi);
 
 %% FRFs numerically computed
 
@@ -307,7 +312,7 @@ f_max_1 = 5;
 i_min1=19952;
 i_max1=24952;
 freq1 = linspace(f_min_1,f_max_1,100);
-G_jk_EXP = [G_jk_a; G_jk_b; G_jk_c];
+G_jk_EXP = [G_jk_a; G_jk_b; G_jk_c; G_jk_d];
 % for i=1:length(f)
 %     if f(i)<f_max_1
 %         i=i+1;
@@ -316,7 +321,7 @@ G_jk_EXP = [G_jk_a; G_jk_b; G_jk_c];
 %         i_max1=i;
 % end
 
-params1 = [omega_1 psi 0.0565 0];
+params1 = [omega_1 psi 0.175 0];
 G_a_EXP_1 = interp1(f, G_jk_EXP(1,:), freq1, 'spline');
 %G_a_EXP_1 = G_jk_EXP(f_min_1:f_max_1, 1);
 %G_a_NUM_1_fun = @(params1,f)...
@@ -381,7 +386,7 @@ grid on
 
 % Other FRF (b)
 
-paramsb1 = [omega_1 psi 0.65 0];
+paramsb1 = [omega_1 psi 0.625 0];
 G_b_EXP_1 = interp1(f, G_jk_EXP(2,:), freq1, 'spline');
 err = @(params) cost_function_FRF(paramsb1,freq1,G_b_EXP_1);
 x_optb_1 = lsqnonlin(err, paramsb1, lb, ub, opts);
@@ -414,7 +419,7 @@ grid on
 
 % c
 
-paramsc1 = [omega_1 psi 2.75 0];
+paramsc1 = [omega_1 psi 2.55 0];
 G_c_EXP_1 = interp1(f, G_jk_EXP(3,:), freq1, 'spline');
 err = @(params) cost_function_FRF(paramsc1,freq1,G_c_EXP_1);
 x_optc_1 = lsqnonlin(err, paramsc1, lb, ub, opts);
@@ -434,7 +439,7 @@ ylabel('Magnitude [m/N]')
 ylim([1e-6 1])
 xlim([3 6])
 grid on
-legend('x_j = 1.08 x_k = 0.48')
+legend('x_j = 0.9 x_k = 1.2')
 
 subplot(2,1,2)
 plot(f,phasec,'LineWidth',3)
@@ -444,6 +449,40 @@ xlim([3 6])
 xlabel ('Frequency [Hz]')
 ylabel('Phase [°]')
 grid on
+
+% d
+
+paramsd1 = [omega_1 psi 1.3 0];
+G_d_EXP_1 = interp1(f, G_jk_EXP(4,:), freq1, 'spline');
+err = @(params) cost_function_FRF(paramsd1,freq1,G_d_EXP_1);
+x_optd_1 = lsqnonlin(err, paramsd1, lb, ub, opts);
+G_d_NUM_1 = x_optd_1(3)./ (-(2*pi*freq1).^2 + 1i*2*x_optd_1(2)*x_optd_1(1)*2*pi*freq1 + x_optd_1(1)^2)+x_optd_1(4);
+
+magnituded_NUM1 = abs(G_d_NUM_1);
+phased_NUM1 = angle(G_d_NUM_1)*(180/pi);
+
+figure
+subplot(2,1,1)
+semilogy(f,magnituded,'LineWidth',3)
+hold on 
+semilogy(freq1,magnituded_NUM1,'or')
+title('FRF')
+xlabel('Frequency [Hz]')
+ylabel('Magnitude [m/N]')
+ylim([1e-6 1])
+xlim([3 6])
+grid on
+legend('x_j = 0.6 x_k = 1.2')
+
+subplot(2,1,2)
+plot(f,phased,'LineWidth',3)
+hold on 
+plot(freq1,phasec_NUM1,'or')
+xlim([3 6])
+xlabel ('Frequency [Hz]')
+ylabel('Phase [°]')
+grid on
+
 
 %% Computation for the other modes
 
@@ -619,4 +658,6 @@ plot(x(167),-imag(max(G_a_NUM_1)*(omega_1*ck_1)/phi(1,1000)),'ob','LineWidth',2)
 hold on 
 plot(x(330),-imag(max(G_b_NUM_1)*(omega_1*ck_1)/phi(1,1000)),'ob','LineWidth',2)
 hold on
-plot(x(800),-imag(max(G_c_NUM_1)*(omega_1*ck_1)/phi(1,1000)),'ob','LineWidth',2)
+plot(x(750),-imag(max(G_c_NUM_1)*(omega_1*ck_1)/phi(1,1000)),'ob','LineWidth',2)
+hold on
+plot(x(500),-imag(max(G_d_NUM_1)*(omega_1*ck_1)/phi(1,1000)),'ob','LineWidth',2)
