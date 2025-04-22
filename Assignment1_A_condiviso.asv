@@ -186,7 +186,7 @@ grid on
 %% Other combinations
 
 n = size(phi);
-x_j = x(358);
+x_j = x(330);
 x_k = x(1000);
 Omega = 2*pi*f;
 psi = 0.01;
@@ -230,16 +230,16 @@ mm_4= trapz(x,integrando_4);
 
 mm = [mm_1 mm_2 mm_3 mm_4];
 
-G_jk_1 = @(Omega) (phi(1,360)*phi(1,1000)/mm(1))./(-Omega.^2+1i*2*psi*omega_1*Omega+omega_1.^2);
+G_jk_1 = @(Omega) (phi(1,330)*phi(1,1000)/mm(1))./(-Omega.^2+1i*2*psi*omega_1*Omega+omega_1.^2);
 G_jk_v_1 = G_jk_1(Omega);
 
-G_jk_2 = @(Omega) (phi(2,360)*phi(2,1000)/mm(2))./(-Omega.^2+1i*2*psi*omega_2*Omega+omega_2.^2);
+G_jk_2 = @(Omega) (phi(2,330)*phi(2,1000)/mm(2))./(-Omega.^2+1i*2*psi*omega_2*Omega+omega_2.^2);
 G_jk_v_2 = G_jk_2(Omega);
 
-G_jk_3 = @(Omega) (phi(3,360)*phi(3,1000)/mm(3))./(-Omega.^2+1i*2*psi*omega_3*Omega+omega_3.^2);
+G_jk_3 = @(Omega) (phi(3,330)*phi(3,1000)/mm(3))./(-Omega.^2+1i*2*psi*omega_3*Omega+omega_3.^2);
 G_jk_v_3 = G_jk_3(Omega);
 
-G_jk_4 = @(Omega) (phi(4,360)*phi(4,1000)/mm(4))./(-Omega.^2+1i*2*psi*omega_4*Omega+omega_4.^2);
+G_jk_4 = @(Omega) (phi(4,330)*phi(4,1000)/mm(4))./(-Omega.^2+1i*2*psi*omega_4*Omega+omega_4.^2);
 G_jk_v_4 = G_jk_4(Omega);
 
 G_jk_b = G_jk_v_1 + G_jk_v_2 + G_jk_v_3 + G_jk_v_4;
@@ -254,7 +254,7 @@ title('FRF')
 xlabel('Frequency [Hz]')
 ylabel('Magnitude [m/N]')
 ylim([1e-8 1e-1])
-legend('x_j = 0.72 x_k = 1.2')
+legend('x_j = 0.4 x_k = 1.2')
 grid on
 subplot(2,1,2)
 plot(f,phaseb,'LineWidth',3)
@@ -343,7 +343,7 @@ grid on
 
 % Other FRF (b)
 
-paramsb1 = [omega_1 psi 0.75 0];
+paramsb1 = [omega_1 psi 0.65 0];
 G_b_EXP_1 = interp1(f, G_jk_EXP(2,:), freq1, 'spline');
 err = @(params) cost_function_FRF(paramsb1,freq1,G_b_EXP_1);
 x_optb_1 = lsqnonlin(err, paramsb1, lb, ub, opts);
@@ -363,7 +363,7 @@ ylabel('Magnitude [m/N]')
 ylim([1e-6 1e-1])
 xlim([3 6])
 grid on
-legend('x_j = 0.8 x_k = 1.2')
+legend('x_j = 0.4 x_k = 1.2')
 
 subplot(2,1,2)
 plot(f,phaseb,'LineWidth',3)
@@ -404,7 +404,7 @@ G_a_NUM_2 = x_opta_2(3)./ (-(2*pi*freq2).^2 + 1i*2*x_opta_2(2)*x_opta_2(1)*2*pi*
 magnitudea_NUM2 = abs(G_a_NUM_2);
 phasea_NUM2 = angle(G_a_NUM_2)*(180/pi);
 
-paramsb2 = [omega_2 psi 1.45 0 0];
+paramsb2 = [omega_2 psi 2.3 0 0];
 G_b_EXP_2 = interp1(f, G_jk_EXP(2,:), freq2, 'spline');
 err = @(params) cost_function_FRF_seismic(paramsb2,freq2,G_b_EXP_2);
 x_optb_2 = lsqnonlin(err, paramsb2, lb, ub, opts);
@@ -426,7 +426,7 @@ G_a_NUM_3 = x_opta_3(3)./ (-(2*pi*freq3).^2 + 1i*2*x_opta_3(2)*x_opta_3(1)*2*pi*
 magnitudea_NUM3 = abs(G_a_NUM_3);
 phasea_NUM3 = angle(G_a_NUM_3)*(180/pi);
 
-paramsb3 = [omega_3 psi 0.458 0 0];
+paramsb3 = [omega_3 psi 2.8 0 0];
 G_b_EXP_3 = interp1(f, G_jk_EXP(2,:), freq3, 'spline');
 err = @(params) cost_function_FRF_seismic(paramsb3,freq3,G_b_EXP_3);
 x_optb_3 = lsqnonlin(err, paramsb3, lb, ub, opts);
@@ -463,7 +463,7 @@ G_a_NUM_4 = x_opta_4(3)./ (-(2*pi*freq4).^2 + 1i*2*x_opta_4(2)*x_opta_4(1)*2*pi*
 magnitudea_NUM4 = abs(G_a_NUM_4);
 phasea_NUM4 = angle(G_a_NUM_4)*(180/pi);
 
-paramsb4 = [omega_4 psi 0.065 0];
+paramsb4 = [omega_4 psi 0.85 0];
 G_b_EXP_4 = interp1(f, G_jk_EXP(2,:), freq4, 'spline');
 err = @(params) cost_function_FRF_static(paramsb4,freq4,G_b_EXP_4);
 x_optb_4 = lsqnonlin(err, paramsb4, lb, ub, opts);
@@ -503,7 +503,7 @@ title('FRF')
 xlabel('Frequency [Hz]')
 ylabel('Magnitude [m/N]')
 grid on
-legend('$G^{EXP}_{jk}  x_j = 0.8 x_k = 1.2$','$G^{NUM}_{jk}$','Interpreter','latex')
+legend('$G^{EXP}_{jk}  x_j = 0.4 x_k = 1.2$','$G^{NUM}_{jk}$','Interpreter','latex')
 
 
 subplot(2,2,3)
@@ -534,4 +534,17 @@ xlabel ('Frequency [Hz]')
 ylabel('Phase [°]')
 grid on
 
-%% 
+%% COMPARISON
+
+normaliz = max(abs(phi_vals_1));
+phi_norm = phi./normaliz;
+
+figure, grid on, box on, hold on
+
+plot([0 L],[0 0],'--k','HandleVisibility','off')
+
+plot(x,phi_norm(1,:),'LineWidth',2)
+hold on
+plot(x(167),imag(max(G_a_NUM_1)*phi(1,1000)/(omega_1*2*psi*)),'ob','LineWidth',2)
+hold on 
+plot(x(330),-max(abs(imag(G_b_NUM_1))),'ob','LineWidth',2)

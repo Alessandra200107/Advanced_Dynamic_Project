@@ -536,3 +536,14 @@ grid on
 
 %% COMPARISON
 
+ck_1 = omega_1*psi*2*mm_1;
+
+figure, grid on, box on, hold on
+
+plot([0 L],[0 0],'--k','HandleVisibility','off')
+
+plot(x,phi(1,:),'LineWidth',2)
+hold on
+plot(x(167),-imag(max(G_a_NUM_1)*(omega_1*ck_1)/phi(1,1000)),'ob','LineWidth',2)
+hold on 
+plot(x(330),-imag(max(G_b_NUM_1)*(omega_1*ck_1)/phi(1,1000)),'ob','LineWidth',2)
