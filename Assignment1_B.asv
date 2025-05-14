@@ -36,12 +36,16 @@ for i=1:12
     grid on
 end
 
-i_nat = zeros(length(f));
-
-for j = 1:12
-    for i=2:length(f)-1
-        if magnitude(:,i) < magnitude(:,i-1) && magnitude(:,i) < magnitude(:,i+1)
-            i_nat(end+1) = i;
-        end
-    end
+for i=1:12
+    
+    [mag(:,i), omega(:,i)]=findpeaks(magnitude(:,i),f);
 end
+% i_nat = [];
+% 
+% for i=2:length(f)-1
+%     if magnitude(i,1) < magnitude(i-1,1) && magnitude(i,1) < magnitude(i+1,1)
+%         i_nat(end+1) = i;
+%     end
+% end
+% 
+% omega = f (i_nat);
