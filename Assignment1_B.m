@@ -65,5 +65,8 @@ for i = 1:12
 end
 
 
+figure()
+semilogy(f,magnitude(:,2))
+grid on
 
 
