@@ -64,5 +64,5 @@ f_min = 650;
 f_max = 680;
 freq1 = linspace(f_min,f_max,500);
 for i = 1:12
-    FRF_mod1(:,i) = interp1(f, FRF(:,i), freq1, 'spline');
+    FRFmod1 = interp1(f, G_jk_EXP(1,:), freq1, 'spline');
 end
