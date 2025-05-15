@@ -68,5 +68,3 @@ end
 figure()
 semilogy(f,magnitude(:,2))
 grid on
-
-
