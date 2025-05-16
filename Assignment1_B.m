@@ -51,17 +51,17 @@ for i = 1:12
     mag(1:2, i) = mag_c{i}(1:2);
 end
 
-omega_1 = omega(1,1);
-omega_2 = omega(2,1);
+omega_1 = omega(1,1)*2*pi;
+omega_2 = omega(2,1)*2*pi;
 
-psi = 0.01;
+psi = 0.008;
 
 %% Numerical computation
 
 % First mode
 
-f_min = omega_1 - 50;
-f_max = omega_1 + 50;
+f_min = 640;
+f_max = 700;
 freq1 = linspace(f_min,f_max,500);
 for i = 1:12
     FRF_mod1(:,i) = interp1(f, FRF(:,i), freq1, 'spline');
@@ -79,7 +79,7 @@ function err = cost_function1(params,freq,G_exp)
     Rh1=params(4);
     
     % FRF del singolo modo
-    G_model = A1./ (-(2*pi*freq).^2 + 1i*2*psi1*om1*2*pi*freq + (om1)^2)+Rh1;
+    G_model = A1./ (-(freq*2*pi).^2 + 1i*2*psi1*om1*freq*2*pi + (om1)^2)+Rh1;
     diff = G_exp - G_model;
     % Errore: parte reale e immaginaria
     %err = [real(G_model - G_exp); imag(G_model - G_exp)];
@@ -87,9 +87,9 @@ function err = cost_function1(params,freq,G_exp)
 end
 
 for i = 1:12
-    params1 = [omega_1 psi mag(1,i) 0];
+    params1 = [omega_1 psi mag(1,i)*2*psi*(omega_1^2) 0];
 
-    err = @(params) cost_function1(params,freq1,FRF_mod1(:,i));
+    err = @(params) cost_function1(params1,freq1,FRF_mod1(:,i));
     % err_v(i) = err;
     lb = [zeros(1,4)];
     ub = [Inf(1,4)];
@@ -99,13 +99,15 @@ for i = 1:12
 
     x_opt_1 = lsqnonlin(err, params1, lb, ub, opts);
     Var(i,:) = x_opt_1;
-    FRF_num1_s = Var(i,3)./ (-(2*pi*freq1).^2 + 1i*2*Var(i,2)*Var(i,1)*2*pi*freq1 + Var(i,1)^2)+Var(i,4);
+    %FRF_num1_s = x_opt_1(3)./ (-(freq1*2*pi).^2 + 1i*2*x_opt_1(2)*x_opt_1(1)*freq1*2*pi + x_opt_1(1)^2)+x_opt_1(4);
+    den = -(freq1*2*pi).^2 + 1i * 2 * Var(i,2) * Var(i,1) * freq1*2*pi + Var(i,1)^2;
+    FRF_num1_s = Var(i,3) ./ den + Var(i,4);
     FRF_num1(i,:) = FRF_num1_s;
 
     magnitude_num1(i,:) = abs(FRF_num1_s);
     phase_num1(i,:) = angle(FRF_num1_s)*(180/pi);
 end
-
+%% 
 figure
 subplot(2,1,1)
 semilogy(f,magnitude(:,1),'LineWidth',3)
