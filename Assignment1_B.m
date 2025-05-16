@@ -60,8 +60,8 @@ psi = 0.01;
 
 % First mode
 
-f_min = 650;
-f_max = 680;
+f_min = omega_1 - 50;
+f_max = omega_1 + 50;
 freq1 = linspace(f_min,f_max,500);
 for i = 1:12
     FRF_mod1(:,i) = interp1(f, FRF(:,i), freq1, 'spline');
@@ -72,9 +72,24 @@ FRF_num1 =zeros(12,length(freq1));
 magnitude_num1 = zeros(12,length(freq1));
 phase_num1 = zeros(12,length(freq1));
 
+function err = cost_function1(params,freq,G_exp)
+    om1 = params(1);
+    psi1= params(2);
+    A1= params(3);
+    Rh1=params(4);
+    
+    % FRF del singolo modo
+    G_model = A1./ (-(2*pi*freq).^2 + 1i*2*psi1*om1*2*pi*freq + (om1)^2)+Rh1;
+    diff = G_exp - G_model;
+    % Errore: parte reale e immaginaria
+    %err = [real(G_model - G_exp); imag(G_model - G_exp)];
+    err = sum(real(diff).^2 + imag(diff).^2);
+end
+
 for i = 1:12
     params1 = [omega_1 psi mag(1,i) 0];
-    err = @(params) cost_function1(params1,freq1,FRF_mod1(:,i));
+
+    err = @(params) cost_function1(params,freq1,FRF_mod1(:,i));
     % err_v(i) = err;
     lb = [zeros(1,4)];
     ub = [Inf(1,4)];
@@ -93,9 +108,9 @@ end
 
 figure
 subplot(2,1,1)
-semilogy(f,magnitude(:,2),'LineWidth',3)
+semilogy(f,magnitude(:,1),'LineWidth',3)
 hold on 
-semilogy(freq1,magnitude_num1(2,:),'or')
+semilogy(freq1,magnitude_num1(1,:),'or')
 title('FRF')
 xlabel('Frequency [Hz]')
 ylabel('Magnitude [m/N]')
@@ -103,9 +118,9 @@ xlim([f_min f_max])
 grid on
 
 subplot(2,1,2)
-plot(f,phase(:,2),'LineWidth',3)
+plot(f,phase(:,1),'LineWidth',3)
 hold on 
-plot(freq1,phase_num1(2,:),'or')
+plot(freq1,phase_num1(1,:),'or')
 xlabel ('Frequency [Hz]')
 ylabel('Phase [°]')
 xlim([f_min f_max])
