@@ -66,3 +66,47 @@ freq1 = linspace(f_min,f_max,500);
 for i = 1:12
     FRF_mod1(:,i) = interp1(f, FRF(:,i), freq1, 'spline');
 end
+
+Var = zeros(12,4);
+FRF_num1 =zeros(12,length(freq1));
+magnitude_num1 = zeros(12,length(freq1));
+phase_num1 = zeros(12,length(freq1));
+
+for i = 1:12
+    params1 = [omega_1 psi mag(1,i) 0];
+    err = @(params) cost_function1(params1,freq1,FRF_mod1(:,i));
+    % err_v(i) = err;
+    lb = [zeros(1,4)];
+    ub = [Inf(1,4)];
+
+    % Ottimizzazione
+    opts = optimoptions('lsqnonlin','Display','iter','MaxFunctionEvaluations',5000);
+
+    x_opt_1 = lsqnonlin(err, params1, lb, ub, opts);
+    Var(i,:) = x_opt_1;
+    FRF_num1_s = Var(i,3)./ (-(2*pi*freq1).^2 + 1i*2*Var(i,2)*Var(i,1)*2*pi*freq1 + Var(i,1)^2)+Var(i,4);
+    FRF_num1(i,:) = FRF_num1_s;
+
+    magnitude_num1(i,:) = abs(FRF_num1_s);
+    phase_num1(i,:) = angle(FRF_num1_s)*(180/pi);
+end
+
+figure
+subplot(2,1,1)
+semilogy(f,magnitude(:,2),'LineWidth',3)
+hold on 
+semilogy(freq1,magnitude_num1(2,:),'or')
+title('FRF')
+xlabel('Frequency [Hz]')
+ylabel('Magnitude [m/N]')
+xlim([f_min f_max])
+grid on
+
+subplot(2,1,2)
+plot(f,phase(:,2),'LineWidth',3)
+hold on 
+plot(freq1,phase_num1(2,:),'or')
+xlabel ('Frequency [Hz]')
+ylabel('Phase [°]')
+xlim([f_min f_max])
+grid on
