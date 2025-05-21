@@ -262,7 +262,7 @@ polarplot(theta_dense, r0 + mode_shape_interp, 'r', 'LineWidth', 2)
 % Forma simmetrica (opzionale)
 polarplot(-theta_dense, r0 - mode_sym_interp, 'b', 'LineWidth', 2)
 
-polarplot(theta, r0 + mode_shape_num, 'or', 'LineWidth', 2)
+polarplot(theta, r0 + mode_shape_num, 'or')
 
 legend(' ','Undeformed','Axial mode shape (identified)', 'Axial mode shape (symmetry)', 'Location','best')
 title('Modal Shape in Polar Coordinates')
@@ -311,7 +311,7 @@ polarplot(theta_dense, r0 + mode_shape_interp, 'r', 'LineWidth', 2)
 % Forma simmetrica (opzionale)
 polarplot(-theta_dense, r0 - mode_sym_interp, 'b', 'LineWidth', 2)
 
-polarplot(theta, r0 + mode_shape_num, 'or', 'LineWidth', 2)
+polarplot(theta, r0 + mode_shape_num, 'or')
 
 legend('Undeformed','Axial mode shape (identified)', 'Axial mode shape (symmetry)', 'Location','best')
 title('Modal Shape in Polar Coordinates')
