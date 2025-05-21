@@ -86,8 +86,10 @@ function err = cost_function1(params,freq,G_exp)
     err = sum(real(diff).^2 + imag(diff).^2);
 end
 
+% Per la stima di Ajk partiamo dalla formula mag(1,i)*2*psi*(omega_1^2)
+
 for i = 1:12
-    params1 = [omega_1 psi mag(1,i)*2*psi*(omega_1^2) 0];
+    params1 = [omega_1 psi mag(1,i)*2.8129e+05 0];
 
     err = @(params) cost_function1(params1,freq1,FRF_mod1(:,i));
     % err_v(i) = err;
@@ -107,7 +109,7 @@ for i = 1:12
     magnitude_num1(i,:) = abs(FRF_num1_s);
     phase_num1(i,:) = angle(FRF_num1_s)*(180/pi);
 end
-%% 
+
 figure
 subplot(2,1,1)
 semilogy(f,magnitude(:,1),'LineWidth',3)
@@ -126,4 +128,84 @@ plot(freq1,phase_num1(1,:),'or')
 xlabel ('Frequency [Hz]')
 ylabel('Phase [°]')
 xlim([f_min f_max])
+grid on
+
+% Second mode
+
+f_min = 1600;
+f_max = 1660;
+freq2 = linspace(f_min,f_max,500);
+for i = 1:12
+    FRF_mod2(:,i) = interp1(f, FRF(:,i), freq2, 'spline');
+end
+
+Var2 = zeros(12,5);
+FRF_num2 = zeros(12,length(freq2));
+magnitude_num2 = zeros(12,length(freq2));
+phase_num2 = zeros(12,length(freq2));
+
+function err = cost_function_FRF_seismic(params, freq, G_exp)
+
+    om1 = params(1);
+    psi1= params(2);
+    A1= params(3);
+    Rh1=params(4);
+    Rk1=params(5);
+    
+    % FRF del singolo modo
+    G_model = A1./ (-(2*pi*freq).^2 + 1i*2*psi1*om1*2*pi*freq + (om1)^2)+Rh1 + Rk1./((2*pi*freq).^2);
+    diff = G_exp - G_model;
+    % Errore: parte reale e immaginaria
+    %err = [real(G_model - G_exp); imag(G_model - G_exp)];
+    err =sum(real(diff).^2 + imag(diff).^2);
+end
+
+for i = 1:12
+    params2 = [omega_2 0.015 mag(2,i)*1.2723e+06 0 0];
+
+    err = @(params) cost_function_FRF_seismic(params2,freq2,FRF_mod2(:,i));
+    % err_v(i) = err;
+    lb = [zeros(1,4)];
+    ub = [Inf(1,4)];
+
+    % Ottimizzazione
+    opts = optimoptions('lsqnonlin','Display','iter','MaxFunctionEvaluations',5000);
+
+    x_opt_2 = lsqnonlin(err, params2, lb, ub, opts);
+    Var2(i,:) = x_opt_2;
+    den = -(freq2*2*pi).^2 + 1i * 2 * Var2(i,2) * Var2(i,1) * freq1*2*pi + Var2(i,1)^2;
+    FRF_num2_s = Var2(i,3) ./ den + Var2(i,4) + + Var2(i,5)./((2*pi*freq2).^2);
+    FRF_num2(i,:) = FRF_num2_s;
+
+    magnitude_num2(i,:) = abs(FRF_num2_s);
+    phase_num2(i,:) = angle(FRF_num2_s)*(180/pi);
+end
+
+figure
+subplot(2,1,1)
+semilogy(f,magnitude(:,1),'-b')
+hold on 
+semilogy(freq2,magnitude_num2(1,:),'--','Color','#0072BD','LineWidth',2)
+hold on
+semilogy(f,magnitude(:,9),'-r')
+hold on
+semilogy(freq2,magnitude_num2(9,:),'--m','LineWidth',2')
+title('FRF')
+legend('FRF exp sensor 1','FRF num sensor 1','FRF exp sensor 9','FRF num sensor 9')
+xlabel('Frequency [Hz]')
+ylabel('Magnitude [m/N]')
+xlim([f_min-10 f_max+10])
+grid on
+
+subplot(2,1,2)
+plot(f,phase(:,1),'-b')
+hold on
+plot(freq2,(180+phase_num2(1,:)),'--','Color','#0072BD','LineWidth',2)
+hold on
+plot(f,phase(:,9),'-r')
+hold on
+plot(freq2,(180+phase_num2(9,:)),'--m','LineWidth',2)
+xlabel ('Frequency [Hz]')
+ylabel('Phase [°]')
+xlim([f_min-10 f_max+10])
 grid on
