@@ -189,7 +189,7 @@ semilogy(freq2,magnitude_num2(1,:),'--','Color','#0072BD','LineWidth',2)
 hold on
 semilogy(f,magnitude(:,9),'-r')
 hold on
-semilogy(freq2,magnitude_num2(9,:),'--m')
+semilogy(freq2,magnitude_num2(9,:),'--m','LineWidth',2')
 title('FRF')
 legend('FRF exp sensor 1','FRF num sensor 1','FRF exp sensor 9','FRF num sensor 9')
 xlabel('Frequency [Hz]')
@@ -198,14 +198,50 @@ xlim([f_min-10 f_max+10])
 grid on
 
 subplot(2,1,2)
-plot(f,phase(:,1))
+plot(f,phase(:,1),'-b')
 hold on
-plot(freq2,(180+phase_num2(1,:)),'--')
+plot(freq2,(180+phase_num2(1,:)),'--','Color','#0072BD','LineWidth',2)
 hold on
-plot(f,phase(:,9))
+plot(f,phase(:,9),'-r')
 hold on
-plot(freq2,(180+phase_num2(9,:)),'--')
+plot(freq2,(180+phase_num2(9,:)),'--m','LineWidth',2)
 xlabel ('Frequency [Hz]')
 ylabel('Phase [°]')
 xlim([f_min-10 f_max+10])
 grid on
+
+%% POLAR PLOTS
+
+% Numero di punti di misura (es. 12 sensori)
+N = 12;
+
+% Angoli (in radianti) equispaziati
+theta = linspace(0, pi, N+1);  % aggiungiamo un punto per chiudere la curva
+theta(end) = [];  % togliamo l'ultimo punto (duplicato a 0/360°)
+
+% Forma modale identificata (esempio fittizio)
+% Qui metti i valori reali ottenuti dal tuo calcolo modale
+
+mode_shape = real(FRF(,1));
+
+% Forma simmetrica (opzionale)
+mode_sym = -mode_shape;
+
+% Raggio del cerchio indeformato
+r0 = 1;
+circle = r0 * ones(size(theta));
+
+% --- Plot ---
+figure; polaraxes; hold on
+
+% Cerchio indeformato
+polarplot(theta, circle, 'k--', 'LineWidth', 1.2)
+
+% Forma modale (deformata aggiunta al cerchio)
+polarplot(theta, r0 + mode_shape, 'r', 'LineWidth', 2)
+
+% Forma simmetrica (opzionale)
+polarplot(theta, r0 + mode_sym, 'b', 'LineWidth', 2)
+
+legend('Undeformed','Axial mode shape (identified)', 'Axial mode shape (symmetry)', 'Location','best')
+title('Modal Shape in Polar Coordinates')

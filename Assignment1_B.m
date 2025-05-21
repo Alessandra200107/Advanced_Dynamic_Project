@@ -209,3 +209,84 @@ xlabel ('Frequency [Hz]')
 ylabel('Phase [°]')
 xlim([f_min-10 f_max+10])
 grid on
+
+%% POLAR PLOTS
+
+% Numero di punti di misura (es. 12 sensori)
+N = 12;
+
+% Angoli (in radianti) equispaziati
+theta = linspace(0, pi, N+1);  % aggiungiamo un punto per chiudere la curva
+theta(end) = [];  % togliamo l'ultimo punto (duplicato a 0/360°)
+
+% Forma modale identificata (esempio fittizio)
+% Qui metti i valori reali ottenuti dal tuo calcolo modale
+idx = 2003;
+mode_shape = [real(FRF(idx,1)) real(FRF(idx,2)) real(FRF(idx,3)) real(FRF(idx,4)) real(FRF(idx,5)) real(FRF(idx,6)) real(FRF(idx,7)) real(FRF(idx,8)) real(FRF(idx,9)) real(FRF(idx,10)) real(FRF(idx,11)) real(FRF(idx,12))];
+
+% Forma simmetrica (opzionale)
+mode_sym = -mode_shape;
+
+% Raggio del cerchio indeformato
+r0 = 1;
+circle = r0 * ones(size(theta));
+
+% --- Plot ---
+figure; 
+pax = polaraxes;
+pax.ThetaZeroLocation = 'bottom';
+hold on
+
+% Cerchio indeformato
+polarplot(theta, circle, 'k--', 'LineWidth', 1.2)
+polarplot(-theta, circle, 'k--', 'LineWidth', 1.2)
+
+% Forma modale (deformata aggiunta al cerchio)
+polarplot(theta, r0 + mode_shape, 'r', 'LineWidth', 2)
+
+% Forma simmetrica (opzionale)
+polarplot(-theta, r0 - mode_sym, 'b', 'LineWidth', 2)
+
+legend('Undeformed','Axial mode shape (identified)', 'Axial mode shape (symmetry)', 'Location','best')
+title('Modal Shape in Polar Coordinates')
+
+
+%% Polar plot del secondo modo
+
+% Numero di punti di misura (es. 12 sensori)
+N = 12;
+
+% Angoli (in radianti) equispaziati
+theta = linspace(0, pi, N+1);  % aggiungiamo un punto per chiudere la curva
+theta(end) = [];  % togliamo l'ultimo punto (duplicato a 0/360°)
+
+% Forma modale identificata (esempio fittizio)
+% Qui metti i valori reali ottenuti dal tuo calcolo modale
+idx2 = 4877;
+mode_shape = [real(FRF(idx2,1)) real(FRF(idx2,2)) real(FRF(idx2,3)) real(FRF(idx2,4)) real(FRF(idx2,5)) real(FRF(idx2,6)) real(FRF(idx2,7)) real(FRF(idx2,8)) real(FRF(idx2,9)) real(FRF(idx2,10)) real(FRF(idx2,11)) real(FRF(idx2,12))];
+
+% Forma simmetrica (opzionale)
+mode_sym = -mode_shape;
+
+% Raggio del cerchio indeformato
+r0 = 1;
+circle = r0 * ones(size(theta));
+
+% --- Plot ---
+figure; 
+pax = polaraxes;
+pax.ThetaZeroLocation = 'bottom';
+hold on
+
+% Cerchio indeformato
+polarplot(theta, circle, 'k--', 'LineWidth', 1.2)
+polarplot(-theta, circle, 'k--', 'LineWidth', 1.2)
+
+% Forma modale (deformata aggiunta al cerchio)
+polarplot(theta, r0 + mode_shape, 'r', 'LineWidth', 2)
+
+% Forma simmetrica (opzionale)
+polarplot(-theta, r0 - mode_sym, 'b', 'LineWidth', 2)
+
+legend('Undeformed','Axial mode shape (identified)', 'Axial mode shape (symmetry)', 'Location','best')
+title('Modal Shape in Polar Coordinates')
