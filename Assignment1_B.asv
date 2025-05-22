@@ -54,7 +54,7 @@ end
 omega_1 = omega(1,1)*2*pi;
 omega_2 = omega(2,1)*2*pi;
 
-psi = 0.008;
+psi = 0.001;
 
 %% Numerical computation
 
@@ -170,9 +170,9 @@ function err = cost_function_FRF_seismic(params, freq, G_exp)
 end
 
 for i = 1:12
-    params2 = [omega_2 0.015 mag(2,i)*1.2723e+06 0 0];
+    params2 = [omega_2 0.01 mag(2,i)*1.2723e+06 0 0];
 
-    err = @(params) cost_function_FRF_seismic(params2,freq2,FRF_mod2(:,i));
+    err = @(params) cost_function_FRF_seismic(params,freq2,FRF_mod2(:,i));
     % err_v(i) = err;
     lb = [zeros(1,4)];
     ub = [Inf(1,4)];
@@ -180,7 +180,7 @@ for i = 1:12
     % Ottimizzazione
     opts = optimoptions('lsqnonlin','Display','iter','MaxFunctionEvaluations',5000);
 
-    x_opt_2 = lsqnonlin(err, params2, lb, ub, opts);
+    x_opt_2 = lsqnonlin(@(params) err(params), params2, lb, ub, opts);
     Var2(i,:) = x_opt_2;
     den = -(freq2*2*pi).^2 + 1i * 2 * Var2(i,2) * Var2(i,1) * freq1*2*pi + Var2(i,1)^2;
     FRF_num2_s = Var2(i,3) ./ den + Var2(i,4) + + Var2(i,5)./((2*pi*freq2).^2);
@@ -262,7 +262,7 @@ polarplot(theta_dense, r0 + mode_shape_interp, 'r', 'LineWidth', 2)
 % Forma simmetrica (opzionale)
 polarplot(-theta_dense, r0 - mode_sym_interp, 'b', 'LineWidth', 2)
 
-polarplot(theta, r0 + mode_shape_num, 'or', 'LineWidth', 2)
+polarplot(theta, r0 + mode_shape_num, 'or')
 
 legend(' ','Undeformed','Axial mode shape (identified)', 'Axial mode shape (symmetry)', 'Location','best')
 title('Modal Shape in Polar Coordinates')
@@ -289,7 +289,7 @@ theta_dense = linspace(0,(pi-15*pi/180),300);
 mode_shape_interp = spline(theta,mode_shape,theta_dense);
 mode_sym_interp = -mode_shape_interp;
 
-mode_shape_num = [real(FRF_num2(1,211)) real(FRF_num2(2,211)) real(FRF_num2(3,211)) real(FRF_num2(4,211)) real(FRF_num2(5,211)) real(FRF_num2(6,211)) real(FRF_num2(7,211)) real(FRF_num2(8,211)) real(FRF_num2(9,211)) real(FRF_num2(10,211)) real(FRF_num2(11,228)) real(FRF_num2(12,228))];
+mode_shape_num = [real(FRF_num2(1,211)) real(FRF_num2(2,211)) real(FRF_num2(3,211)) real(FRF_num2(4,211)) real(FRF_num2(5,211)) real(FRF_num2(6,211)) real(FRF_num2(7,211)) real(FRF_num2(8,211)) real(FRF_num2(9,211)) real(FRF_num2(10,211)) real(FRF_num2(11,211)) real(FRF_num2(12,211))];
 
 % Raggio del cerchio indeformato
 r0 = 1;
@@ -311,7 +311,7 @@ polarplot(theta_dense, r0 + mode_shape_interp, 'r', 'LineWidth', 2)
 % Forma simmetrica (opzionale)
 polarplot(-theta_dense, r0 - mode_sym_interp, 'b', 'LineWidth', 2)
 
-polarplot(theta_dense, r0 + mode_shape_num, 'or', 'LineWidth', 2)
+polarplot(theta, r0 + mode_shape_num, 'or')
 
 legend('Undeformed','Axial mode shape (identified)', 'Axial mode shape (symmetry)', 'Location','best')
 title('Modal Shape in Polar Coordinates')
