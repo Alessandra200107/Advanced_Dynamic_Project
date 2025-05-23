@@ -35,7 +35,6 @@ for i=1:12
     hold on
     grid on
 end
-
 mag_c = cell(1,12);
 omega_c = cell(1,12);
 
@@ -54,7 +53,7 @@ end
 omega_1 = omega(1,1)*2*pi;
 omega_2 = omega(2,1)*2*pi;
 
-psi = 0.01;
+psi = 0.008;
 
 %% Numerical computation
 
@@ -133,7 +132,7 @@ plot(freq1,(phase_num1(1,:)),'--','Color','#0072BD','LineWidth',2)
 hold on
 plot(f,phase(:,9),'-r')
 hold on
-plot(freq1,(phase_num1(9,:)),'--m','LineWidth',2)
+plot(freq1,(180+phase_num1(9,:)),'--','Color','m','LineWidth',2)
 xlabel ('Frequency [Hz]')
 ylabel('Phase [°]')
 xlim([f_min-10 f_max+10])
@@ -170,9 +169,9 @@ function err = cost_function_FRF_seismic(params, freq, G_exp)
 end
 
 for i = 1:12
-    params2 = [omega_2 psi mag(2,i)*omega_2^2*2*psi 0 0];
+    params2 = [omega_2 0.0075 mag(2,i)*omega_2^2*2*0.0075 0 0];
 
-    err = @(params) cost_function_FRF_seismic(params,freq2,FRF_mod2(:,i));
+    err = @(params) cost_function_FRF_seismic(params2,freq2,FRF_mod2(:,i));
     % err_v(i) = err;
     lb = [0 0 0 -Inf -Inf];
     ub = [Inf Inf Inf Inf Inf];
@@ -261,9 +260,9 @@ polarplot(theta_dense, r0 + mode_shape_interp, 'r', 'LineWidth', 2)
 % Forma simmetrica (opzionale)
 polarplot(-theta_dense, r0 - mode_sym_interp, 'b', 'LineWidth', 2)
 
-polarplot(theta, r0 + mode_shape_num, 'or')
+polarplot(theta, r0 + mode_shape, 'or')
 
-legend(' ','Undeformed','Axial mode shape (identified)', 'Axial mode shape (symmetry)', 'Location','best')
+legend('Undeformed','Axial mode shape (identified)', 'Axial mode shape (symmetry)', 'Location','best')
 title('Modal Shape in Polar Coordinates')
 
 
@@ -310,7 +309,7 @@ polarplot(theta_dense, r0 + mode_shape_interp, 'r', 'LineWidth', 2)
 % Forma simmetrica (opzionale)
 polarplot(-theta_dense, r0 - mode_sym_interp, 'b', 'LineWidth', 2)
 
-polarplot(theta, r0 + mode_shape_num, 'or')
+polarplot(theta, r0 + mode_shape, 'or')
 
 legend('Undeformed','Axial mode shape (identified)', 'Axial mode shape (symmetry)', 'Location','best')
 title('Modal Shape in Polar Coordinates')

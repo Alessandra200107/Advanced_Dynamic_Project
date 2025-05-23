@@ -35,7 +35,7 @@ for i=1:12
     hold on
     grid on
 end
-
+savefig()
 mag_c = cell(1,12);
 omega_c = cell(1,12);
 
@@ -54,7 +54,7 @@ end
 omega_1 = omega(1,1)*2*pi;
 omega_2 = omega(2,1)*2*pi;
 
-psi = 0.001;
+psi = 0.008;
 
 %% Numerical computation
 
@@ -133,7 +133,7 @@ plot(freq1,(phase_num1(1,:)),'--','Color','#0072BD','LineWidth',2)
 hold on
 plot(f,phase(:,9),'-r')
 hold on
-plot(freq1,(phase_num1(9,:)),'--m','LineWidth',2)
+plot(freq1,(180+phase_num1(9,:)),'--','Color','m','LineWidth',2)
 xlabel ('Frequency [Hz]')
 ylabel('Phase [°]')
 xlim([f_min-10 f_max+10])
@@ -165,25 +165,24 @@ function err = cost_function_FRF_seismic(params, freq, G_exp)
     G_model = A1./ (-(2*pi*freq).^2 + 1i*2*psi1*om1*2*pi*freq + (om1)^2)+Rh1 + Rk1./((2*pi*freq).^2);
     diff = G_exp - G_model;
     % Errore: parte reale e immaginaria
-    %err = [real(G_model - G_exp); imag(G_model - G_exp)];
-    err =sum(real(diff).^2 + imag(diff).^2);
+    %err = [real(diff); imag(diff)];
+    err = sum(sum((real(diff).^2 + imag(diff).^2)));
 end
 
 for i = 1:12
-    params2 = [omega_2 0.01 mag(2,i)*1.2723e+06 0 0];
+    params2 = [omega_2 0.0075 mag(2,i)*omega_2^2*2*0.0075 0 0];
 
-    err = @(params) cost_function_FRF_seismic(params,freq2,FRF_mod2(:,i));
+    err = @(params) cost_function_FRF_seismic(params2,freq2,FRF_mod2(:,i));
     % err_v(i) = err;
-    lb = [zeros(1,4)];
-    ub = [Inf(1,4)];
-
+    lb = [0 0 0 -Inf -Inf];
+    ub = [Inf Inf Inf Inf Inf];
     % Ottimizzazione
-    opts = optimoptions('lsqnonlin','Display','iter','MaxFunctionEvaluations',5000);
+    opts = optimoptions('lsqnonlin','Algorithm','levenberg-marquardt', 'StepTolerance', 10e-20);
 
-    x_opt_2 = lsqnonlin(@(params) err(params), params2, lb, ub, opts);
+    x_opt_2 = lsqnonlin( err, params2, [], []);
     Var2(i,:) = x_opt_2;
-    den = -(freq2*2*pi).^2 + 1i * 2 * Var2(i,2) * Var2(i,1) * freq1*2*pi + Var2(i,1)^2;
-    FRF_num2_s = Var2(i,3) ./ den + Var2(i,4) + + Var2(i,5)./((2*pi*freq2).^2);
+    den = -(freq2*2*pi).^2 + 1i * 2 * Var2(i,2) * Var2(i,1) * freq2*2*pi + Var2(i,1)^2;
+    FRF_num2_s = Var2(i,3) ./ den + Var2(i,4) + Var2(i,5)./((2*pi*freq2).^2);
     FRF_num2(i,:) = FRF_num2_s;
 
     magnitude_num2(i,:) = abs(FRF_num2_s);
@@ -262,7 +261,7 @@ polarplot(theta_dense, r0 + mode_shape_interp, 'r', 'LineWidth', 2)
 % Forma simmetrica (opzionale)
 polarplot(-theta_dense, r0 - mode_sym_interp, 'b', 'LineWidth', 2)
 
-polarplot(theta, r0 + mode_shape_num, 'or')
+polarplot(theta, r0 + mode_shape, 'or')
 
 legend(' ','Undeformed','Axial mode shape (identified)', 'Axial mode shape (symmetry)', 'Location','best')
 title('Modal Shape in Polar Coordinates')
@@ -311,7 +310,7 @@ polarplot(theta_dense, r0 + mode_shape_interp, 'r', 'LineWidth', 2)
 % Forma simmetrica (opzionale)
 polarplot(-theta_dense, r0 - mode_sym_interp, 'b', 'LineWidth', 2)
 
-polarplot(theta, r0 + mode_shape_num, 'or')
+polarplot(theta, r0 + mode_shape, 'or')
 
 legend('Undeformed','Axial mode shape (identified)', 'Axial mode shape (symmetry)', 'Location','best')
 title('Modal Shape in Polar Coordinates')
