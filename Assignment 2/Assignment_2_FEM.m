@@ -127,6 +127,7 @@ ylabel('Magnitude [m/N]')
 grid on
 hold on
 semilogy(om/(2*pi),abs(FRF_modB),'LineWidth',3)
+legend('FEM','Modal')
 subplot(2,1,2)
 plot(om/(2*pi),(angle(FRF_dispB)*180/pi),'LineWidth',3)
 xlabel ('Frequency [Hz]')
