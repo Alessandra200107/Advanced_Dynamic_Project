@@ -106,7 +106,7 @@ grid on
 
 %% MODAL APPROACH
 
-ii = 1:2;
+ii = 1:2
 Phi = modes(:,ii);
 Mmod = Phi'*M_FF*Phi;
 Kmod = Phi'*K_FF*Phi;
@@ -116,25 +116,4 @@ for ii = 1:length(om)
     xx_mod(:,ii) = (-om(ii)^2*Mmod + 1i*om(ii)*Cmod +Kmod)\Fmod;
 end
 xx_m = Phi*xx_mod;
-FRF_modB = xx_m(idb(7,2),:);
-
-figure()
-subplot(2,1,1)
-semilogy(om/(2*pi),abs(FRF_dispB),'LineWidth',3)
-title('FRF with respect to the vertical displacement of point B')
-xlabel('Frequency [Hz]')
-ylabel('Magnitude [m/N]')
-grid on
-hold on
-semilogy(om/(2*pi),abs(FRF_modB),'LineWidth',3)
-subplot(2,1,2)
-plot(om/(2*pi),(angle(FRF_dispB)*180/pi),'LineWidth',3)
-xlabel ('Frequency [Hz]')
-ylabel('Phase [°]')
-grid on
-hold on
-plot(om/(2*pi),(angle(FRF_modB)*180/pi),'LineWidth',3)
-
-%% STATIC RESPONSE DUE TO THE WEIGHT
-
-g = 9.81; 
+FRF_
