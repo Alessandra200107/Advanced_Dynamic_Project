@@ -150,15 +150,16 @@ vert = idb(:,2);
 % end
 
 vert_c = [vert(1); vert(41)];
-vert(1) = [];
-vert(40) = [];
+% vert(1) = [];
+% vert(40) = [];
 acc(vert) = -g;
 acc_c(vert_c-ndof) = -g;
-Fg_FF = M_FF*acc;
-Xg_FF = K_FF\Fg_FF;
-Fg_FC = M_FC*acc_c;
-Xg_FC = K_FC\Fg_FC;
-Xg = [Xg_FF; Xg_FC];
+Fg = M*acc;
+Fg_FF = Fg(1:ndof);
+Xg = K_FF\Fg_FF;
+% Fg_FC = M_CF*acc;
+% Xg_FC = K_CF\Fg_FC;
+% Xg = [Xg_FF; Xg_FC];
 
 figure()
 diseg2(Xg,150,incidenze,l,gamma,posiz,idb,xy);
