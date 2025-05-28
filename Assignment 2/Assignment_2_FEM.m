@@ -139,3 +139,27 @@ plot(om/(2*pi),(angle(FRF_modB)*180/pi),'LineWidth',3)
 %% STATIC RESPONSE DUE TO THE WEIGHT
 
 g = 9.81; 
+acc = zeros(ndof,1);
+acc_c = zeros(nnod*3-ndof,1);
+vert = idb(:,2);
+
+% for ii = 1:length(vert)
+%     if idb(ii,2)<=170
+%         vert_dof(ii) = idb(ii,2);
+%     end
+% end
+
+vert_c = [vert(1); vert(41)];
+vert(1) = [];
+vert(40) = [];
+acc(vert) = -g;
+acc_c(vert_c-ndof) = -g;
+Fg_FF = M_FF*acc;
+Xg_FF = K_FF\Fg_FF;
+Fg_FC = M_FC*acc_c;
+Xg_FC = K_FC\Fg_FC;
+Xg = [Xg_FF; Xg_FC];
+
+figure()
+diseg2(Xg,150,incidenze,l,gamma,posiz,idb,xy);
+title('Static deflecton due to the weight')
