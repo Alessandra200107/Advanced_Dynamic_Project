@@ -166,4 +166,4 @@ diseg2(Xg,150,incidenze,l,gamma,posiz,idb,xy);
 title('Static deflecton due to the weight')
 
 max_def = max(abs((Xg))); % maximum vertical displacement in m
-fprintf('The maximum vertical displacement is %.6f mm\n', max_def*1000);
+fprintf('\nThe maximum vertical displacement is %.6f mm\n', max_def*1000);
