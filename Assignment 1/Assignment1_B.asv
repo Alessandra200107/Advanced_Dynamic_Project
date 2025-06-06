@@ -312,4 +312,4 @@ polarplot(-theta_dense, r0 - mode_sym_interp, 'b', 'LineWidth', 2)
 polarplot(theta, r0 + mode_shape, 'or')
 
 legend('Undeformed','Axial mode shape (identified)', 'Axial mode shape (symmetry)', 'Location','best')
-title('Modal Shape in Polar Coordinates f = 1625.3 xi = 0.0075')
+title('Modal Shape in Polar Coordinates f = 1625.3 xi')
